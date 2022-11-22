@@ -23,7 +23,7 @@ const RegistrationForm = ({
       <form autoComplete='off' className='flex flex-col'>
         <input
           type='email'
-          className='bg-white rounded-lg p-10 md:p-20 focus:outline-none text-16 mb-18'
+          className='bg-white rounded-lg focus:border-blue border-3 border-transparent p-10 md:p-20 focus:outline-none text-16 mb-18 transition duration-300 ease-in'
           id='registration-email'
           placeholder='Enter email'
           name='email'
@@ -33,7 +33,7 @@ const RegistrationForm = ({
         />
         <input
           type='password'
-          className='bg-white rounded-lg p-10 md:p-20 focus:outline-none text-16 mb-24'
+          className='bg-white rounded-lg focus:border-blue border-3 border-transparent p-10 md:p-20 focus:outline-none text-16 mb-18 transition duration-300 ease-in'
           id='registration-password'
           placeholder='Enter password'
           name='pswd'
@@ -44,7 +44,7 @@ const RegistrationForm = ({
         <button
           onClick={() => handleSubmit}
           id='button'
-          className='bg-white rounded-lg py-10 px-20 font-heading text-yellow font-bold'
+          className='bg-white text-yellow hover:bg-pink hover:text-black rounded-lg py-10 px-20 font-heading font-bold transition duration-300'
         >
           Continua
         </button>
