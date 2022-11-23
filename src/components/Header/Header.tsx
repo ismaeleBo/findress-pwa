@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LoginModal from '../LoginModal';
 import Menu from '../Menu';
+import { useDispatch } from 'react-redux';
 import './Header.scss';
+import { logoutUser } from '../../store/slices/userSlice';
+import { useSelectUser } from '../../store/selectors';
 
 const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isLoginOpen, setLoginOpen] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handlePressMenu = () => {
     setLoginOpen(false);
@@ -17,15 +22,33 @@ const Header = () => {
     setLoginOpen(!isLoginOpen);
   };
 
+  const handlePressLogout = () => {
+    dispatch(logoutUser());
+  };
+
+  const user = useSelectUser();
+
+  useEffect(() => {
+    if (user.isLogged) {
+      setLoginOpen(false);
+    }
+  }, [user, setLoginOpen]);
+
   return (
     <div>
       <header className='font-heading relative header flex bg-white top-0 left-0 w-full p-20'>
         <button className='mr-24' onClick={handlePressMenu}>
           Menu
         </button>
-        <button onClick={handlePressLogin} className={'text-yellow'}>
-          Login
-        </button>
+        {user.isLogged ? (
+          <button onClick={handlePressLogout} className={'text-yellow'}>
+            Logout
+          </button>
+        ) : (
+          <button onClick={handlePressLogin} className={'text-yellow'}>
+            Login
+          </button>
+        )}
       </header>
       <Menu isVisible={isMenuOpen} />
       <LoginModal isVisible={isLoginOpen} onClose={() => setLoginOpen(false)} />

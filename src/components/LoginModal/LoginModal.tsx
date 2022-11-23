@@ -14,8 +14,6 @@ interface LoginModalProps {
 const LoginModal = ({ isVisible, onClose }: LoginModalProps) => {
   const [showRegistration, setShowRegistration] = useState(false);
 
-  // const register = async () => {};
-
   // const login = async () => {};
 
   // const logout = async () => {};
