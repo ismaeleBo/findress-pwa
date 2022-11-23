@@ -1,0 +1,15 @@
+.DS_Store
+**/.history
+
+# App bundles
+build/
+
+# IDE
+.vscode/
+.idea/
+/gen/
+
+# Just in case
+node_modules/
+.env
+test.sh
