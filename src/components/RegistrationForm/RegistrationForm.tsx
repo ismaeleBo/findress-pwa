@@ -105,7 +105,7 @@ const RegistrationForm = ({
           id='registration-username'
           placeholder={placeholders.username}
           name='username'
-          autoComplete='no-autocomplete-username'
+          autoComplete='off'
           onChange={(e) => {
             handleChange(e);
             setIsError(false);
@@ -118,7 +118,7 @@ const RegistrationForm = ({
           id='registration-email'
           placeholder={placeholders.email}
           name='email'
-          autoComplete='no-autocomplete-email'
+          autoComplete='off'
           onChange={(e) => {
             handleChange(e);
             setIsError(false);
@@ -131,7 +131,7 @@ const RegistrationForm = ({
           id='registration-psw'
           placeholder={placeholders.password}
           name='password'
-          autoComplete='no-autocomplete-password'
+          autoComplete='new-password'
           onChange={(e) => {
             handleChange(e);
             setIsError(false);

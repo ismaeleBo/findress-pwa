@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import './LoginForm.scss';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -17,6 +17,9 @@ interface FormFields {
 }
 
 const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const dispatch = useDispatch();
 
   const getUserByUID = async (uid: string) => {
@@ -35,6 +38,8 @@ const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
 
   const handleLogin = async (values: FormFields) => {
     try {
+      setIsError(false);
+      setIsLoading(true);
       await signInWithEmailAndPassword(auth, values.email, values.password);
 
       if (auth.currentUser?.uid) {
@@ -48,8 +53,15 @@ const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
             isLogged: true,
           })
         );
+        setIsLoading(false);
+        setIsSuccess(true);
       }
-    } catch {}
+    } catch (error) {
+      setIsLoading(false);
+      setIsSuccess(false);
+      setIsError(true);
+      console.log(error);
+    }
   };
   const { values, handleSubmit, handleChange } = useFormik({
     initialValues: {
@@ -66,6 +78,8 @@ const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
     password: 'Inserisci la tua password',
   };
 
+  const isValid = values.email && values.password;
+
   return (
     <div className='login-form z-100'>
       <form
@@ -80,7 +94,10 @@ const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
           placeholder={placeholders.email}
           name='email'
           autoComplete='false'
-          onChange={handleChange}
+          onChange={(e) => {
+            handleChange(e);
+            setIsError(false);
+          }}
           value={values.email}
         />
         <input
@@ -89,17 +106,33 @@ const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
           id='login-psw'
           placeholder={placeholders.password}
           name='password'
-          autoComplete='false'
-          onChange={handleChange}
+          autoComplete='chrome-off'
+          onChange={(e) => {
+            handleChange(e);
+            setIsError(false);
+          }}
           value={values.password}
         />
         <button
+          disabled={isLoading || isError || !isValid}
           type='submit'
           id='button'
-          className='login-form-input bg-white text-yellow hover:bg-pink hover:text-black rounded-lg py-10 px-20 font-heading font-bold transition duration-300'
+          className='login-form-input disabled:bg-white disabled:text-yellow disabled:opacity-20 bg-white text-yellow hover:bg-pink hover:text-black rounded-lg py-10 px-20 font-heading font-bold transition duration-300'
         >
           Accedi
         </button>
+        {isError && (
+          <div className='mt-20'>
+            <p className='text-18 text-pink'>Si è verificato un errore</p>
+          </div>
+        )}
+        {isSuccess && (
+          <div className='mt-20'>
+            <p className='text-18 text-pink'>
+              Registrazione andata a buon fine!
+            </p>
+          </div>
+        )}
       </form>
       <button
         className='text-14 text-white mt-20'
