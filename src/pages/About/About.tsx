@@ -6,8 +6,6 @@ const About = () => {
   const { number } = useParams();
 
   useEffect(() => {
-    console.log(number);
-
     if (number) {
       setMessage(`The number is ${number}`);
     } else {

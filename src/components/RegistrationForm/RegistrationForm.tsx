@@ -27,13 +27,11 @@ const RegistrationSchema = Yup.object().shape({
 
 const updateUser = (data: UserData) => {
   const collectionRef = collection(db, 'users');
-  addDoc(collectionRef, data)
-    .then((res) => {
-      console.log(res);
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+  try {
+    addDoc(collectionRef, data);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const RegistrationForm = ({
@@ -42,9 +40,10 @@ const RegistrationForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
   const dispatch = useDispatch();
 
-  const register = async (
+  const handleRegistration = async (
     username: string,
     email: string,
     password: string
@@ -80,7 +79,7 @@ const RegistrationForm = ({
       username: '',
     },
     onSubmit: (values) => {
-      register(values.username, values.email, values.password);
+      handleRegistration(values.username, values.email, values.password);
     },
     validationSchema: RegistrationSchema,
   });

@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import './Header.scss';
 import { logoutUser } from '../../store/slices/userSlice';
 import { useSelectUser } from '../../store/selectors';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase-config';
 
 const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -22,7 +24,8 @@ const Header = () => {
     setLoginOpen(!isLoginOpen);
   };
 
-  const handlePressLogout = () => {
+  const handlePressLogout = async () => {
+    await signOut(auth);
     dispatch(logoutUser());
   };
 

@@ -1,19 +1,63 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import './LoginForm.scss';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../../firebase-config';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../store/slices/userSlice';
+import { collection, getDocs } from 'firebase/firestore';
 
 interface LoginFormProps {
   onRegisterButtonPress: () => void;
 }
 
+interface FormFields {
+  email: string;
+  password: string;
+}
+
 const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
+  const dispatch = useDispatch();
+
+  const getUserByUID = async (uid: string) => {
+    const collectionRef = collection(db, 'users');
+    try {
+      const res = await getDocs(collectionRef);
+      const users = res.docs.map((doc) => ({ data: doc.data(), id: doc.id }));
+      const currentUser = users.filter((el) => {
+        return el.data.uid === uid;
+      });
+      return currentUser[0].data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleLogin = async (values: FormFields) => {
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+
+      if (auth.currentUser?.uid) {
+        const user = await getUserByUID(auth.currentUser?.uid);
+
+        dispatch(
+          loginUser({
+            username: user?.username,
+            email: values.email,
+            uid: auth.currentUser?.uid,
+            isLogged: true,
+          })
+        );
+      }
+    } catch {}
+  };
   const { values, handleSubmit, handleChange } = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
     onSubmit: (values) => {
-      console.log(values);
+      handleLogin(values);
     },
   });
 
