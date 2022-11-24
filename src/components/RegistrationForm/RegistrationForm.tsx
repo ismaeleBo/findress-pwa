@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import './RegistrationForm.scss';
 import * as Yup from 'yup';
 import { loginUser } from '../../store/slices/userSlice';
+import eye from '../../assets/icons/eye.png';
+import closedEye from '../../assets/icons/closed-eye.png';
 
 interface RegistrationFormProps {
   onAlreadyRegisteredButtonPress: () => void;
@@ -23,6 +25,7 @@ const RegistrationSchema = Yup.object().shape({
   username: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string().required('Required'),
+  passwordConfirm: Yup.string().required('Required'),
 });
 
 const updateUser = (data: UserData) => {
@@ -39,7 +42,9 @@ const RegistrationForm = ({
 }: RegistrationFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
+    useState(false);
 
   const dispatch = useDispatch();
 
@@ -58,7 +63,6 @@ const RegistrationForm = ({
           updateUser({ username, email, uid });
           dispatch(loginUser({ username, email, uid, isLogged: true }));
           setIsLoading(false);
-          setIsSuccess(true);
         } catch (error) {
           console.log(error);
           setIsLoading(false);
@@ -77,6 +81,7 @@ const RegistrationForm = ({
       email: '',
       password: '',
       username: '',
+      passwordConfirm: '',
     },
     onSubmit: (values) => {
       handleRegistration(values.username, values.email, values.password);
@@ -84,11 +89,16 @@ const RegistrationForm = ({
     validationSchema: RegistrationSchema,
   });
 
-  const isValid = values.username && values.email && values.password;
+  const isValid =
+    values.username &&
+    values.email &&
+    values.password &&
+    values.passwordConfirm === values.password;
 
   const placeholders = {
     email: 'Inserisci la tua email',
     password: 'Inserisci la tua password',
+    passwordConfirm: 'Conferma la tua password',
     username: 'Inserisci il tuo nome',
   };
 
@@ -125,19 +135,57 @@ const RegistrationForm = ({
           }}
           value={values.email}
         />
-        <input
-          type='password'
-          className='registration-form-input bg-white rounded-lg focus:border-blue border-3 border-transparent p-10 md:p-20 focus:outline-none text-16 mb-18 transition duration-300 ease-in'
-          id='registration-psw'
-          placeholder={placeholders.password}
-          name='password'
-          autoComplete='new-password'
-          onChange={(e) => {
-            handleChange(e);
-            setIsError(false);
-          }}
-          value={values.password}
-        />
+        <div className='bg-white rounded-lg focus:border-blue border-3 border-transparent text-16 mb-18 transition duration-300 ease-in flex justify-between align-center'>
+          <input
+            type={isPasswordVisible ? 'text' : 'password'}
+            className='registration-form-input focus:outline-none p-10 md:p-20 bg-white w-full'
+            id='registration-psw'
+            placeholder={placeholders.password}
+            name='password'
+            autoComplete='new-password'
+            onChange={(e) => {
+              handleChange(e);
+              setIsError(false);
+            }}
+            value={values.password}
+          />
+          <div className='flex flex-col justify-center'>
+            <button
+              type='button'
+              className='h-32 w-32 mr-12'
+              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+            >
+              <img src={isPasswordVisible ? closedEye : eye} alt='eye' />
+            </button>
+          </div>
+        </div>
+
+        <div className='bg-white rounded-lg focus:border-blue border-3 border-transparent text-16 mb-18 transition duration-300 ease-in flex justify-between align-center'>
+          <input
+            type={isPasswordConfirmVisible ? 'text' : 'password'}
+            className='registration-form-input focus:outline-none p-10 md:p-20 bg-white w-full'
+            id='registration-psw-confirm'
+            placeholder={placeholders.passwordConfirm}
+            name='passwordConfirm'
+            autoComplete='new-password'
+            onChange={(e) => {
+              handleChange(e);
+              setIsError(false);
+            }}
+            value={values.passwordConfirm}
+          />
+          <div className='flex flex-col justify-center'>
+            <button
+              type='button'
+              className='h-32 w-32 mr-12'
+              onClick={() =>
+                setIsPasswordConfirmVisible(!isPasswordConfirmVisible)
+              }
+            >
+              <img src={isPasswordConfirmVisible ? closedEye : eye} alt='eye' />
+            </button>
+          </div>
+        </div>
         <button
           disabled={isLoading || isError || !isValid}
           type='submit'
@@ -149,13 +197,6 @@ const RegistrationForm = ({
         {isError && (
           <div className='mt-20'>
             <p className='text-18 text-pink'>Si è verificato un errore</p>
-          </div>
-        )}
-        {isSuccess && (
-          <div className='mt-20'>
-            <p className='text-18 text-pink'>
-              Registrazione andata a buon fine!
-            </p>
           </div>
         )}
       </form>

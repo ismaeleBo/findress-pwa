@@ -19,7 +19,6 @@ interface FormFields {
 const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
   const dispatch = useDispatch();
 
   const getUserByUID = async (uid: string) => {
@@ -54,11 +53,9 @@ const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
           })
         );
         setIsLoading(false);
-        setIsSuccess(true);
       }
     } catch (error) {
       setIsLoading(false);
-      setIsSuccess(false);
       setIsError(true);
       console.log(error);
     }
@@ -124,13 +121,7 @@ const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
         {isError && (
           <div className='mt-20'>
             <p className='text-18 text-pink'>Si è verificato un errore</p>
-          </div>
-        )}
-        {isSuccess && (
-          <div className='mt-20'>
-            <p className='text-18 text-pink'>
-              Registrazione andata a buon fine!
-            </p>
+            <p className='text-18 text-pink'>Controlla i dati e riprova</p>
           </div>
         )}
       </form>
