@@ -90,7 +90,8 @@ const RegistrationForm = ({
     values.username &&
     values.email &&
     values.password &&
-    values.passwordConfirm === values.password;
+    values.passwordConfirm === values.password &&
+    values.password.length > 7;
 
   const placeholders = {
     email: 'Inserisci la tua email',
@@ -133,6 +134,7 @@ const RegistrationForm = ({
           value={values.password}
           name='password'
           id={'registration-psw'}
+          showMinChar
           onChange={(e) => {
             handleChange(e);
             setIsError(false);
