@@ -6,6 +6,9 @@ import { auth, db } from '../../firebase-config';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../store/slices/userSlice';
 import { collection, getDocs } from 'firebase/firestore';
+import TextInput from '../TextInput';
+import PasswordInput from '../PasswordInput';
+import ButtonPrimary from '../ButtonPrimary';
 
 interface LoginFormProps {
   onRegisterButtonPress: () => void;
@@ -60,6 +63,7 @@ const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
       console.log(error);
     }
   };
+
   const { values, handleSubmit, handleChange } = useFormik({
     initialValues: {
       email: '',
@@ -84,40 +88,33 @@ const LoginForm = ({ onRegisterButtonPress }: LoginFormProps) => {
         className='flex flex-col'
         onSubmit={handleSubmit}
       >
-        <input
+        <TextInput
           type='email'
-          className='login-form-input bg-white rounded-lg focus:border-blue border-3 border-transparent p-10 md:p-20 focus:outline-none text-16 mb-18 transition duration-300 ease-in'
           id='login-email'
-          placeholder={placeholders.email}
           name='email'
-          autoComplete='false'
-          onChange={(e) => {
-            handleChange(e);
-            setIsError(false);
-          }}
+          placeholder={placeholders.email}
           value={values.email}
-        />
-        <input
-          type='password'
-          className='login-form-input bg-white rounded-lg focus:border-blue border-3 border-transparent p-10 md:p-20 focus:outline-none text-16 mb-18 transition duration-300 ease-in'
-          id='login-psw'
-          placeholder={placeholders.password}
-          name='password'
-          autoComplete='chrome-off'
           onChange={(e) => {
             handleChange(e);
             setIsError(false);
           }}
-          value={values.password}
         />
-        <button
+        <PasswordInput
+          placeholder={placeholders.password}
+          value={values.password}
+          id='login-psw'
+          name='password'
+          onChange={(e) => {
+            handleChange(e);
+            setIsError(false);
+          }}
+        />
+        <ButtonPrimary
           disabled={isLoading || isError || !isValid}
           type='submit'
-          id='button'
-          className='login-form-input disabled:bg-white disabled:text-yellow disabled:opacity-20 bg-white text-yellow hover:bg-pink hover:text-black rounded-lg py-10 px-20 font-heading font-bold transition duration-300'
-        >
-          Accedi
-        </button>
+          id='confirm-login-button'
+          label='Accedi'
+        />
         {isError && (
           <div className='mt-20'>
             <p className='text-18 text-pink'>Si è verificato un errore</p>

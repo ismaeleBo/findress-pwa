@@ -5,11 +5,11 @@ import { auth } from '../../firebase-config';
 import { db } from '../../firebase-config';
 import { addDoc, collection } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
-import './RegistrationForm.scss';
 import * as Yup from 'yup';
 import { loginUser } from '../../store/slices/userSlice';
-import eye from '../../assets/icons/eye.png';
-import closedEye from '../../assets/icons/closed-eye.png';
+import PasswordInput from '../PasswordInput';
+import TextInput from '../TextInput';
+import ButtonPrimary from '../ButtonPrimary';
 
 interface RegistrationFormProps {
   onAlreadyRegisteredButtonPress: () => void;
@@ -42,9 +42,6 @@ const RegistrationForm = ({
 }: RegistrationFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isPasswordConfirmVisible, setIsPasswordConfirmVisible] =
-    useState(false);
 
   const dispatch = useDispatch();
 
@@ -109,91 +106,54 @@ const RegistrationForm = ({
         className='flex flex-col'
         onSubmit={handleSubmit}
       >
-        <input
+        <TextInput
           type='text'
-          className='registration-form-input bg-white rounded-lg focus:border-blue border-3 border-transparent p-10 md:p-20 focus:outline-none text-16 mb-18 transition duration-300 ease-in'
           id='registration-username'
           placeholder={placeholders.username}
           name='username'
-          autoComplete='off'
+          value={values.username}
           onChange={(e) => {
             handleChange(e);
             setIsError(false);
           }}
-          value={values.username}
         />
-        <input
+        <TextInput
           type='email'
-          className='registration-form-input bg-white rounded-lg focus:border-blue border-3 border-transparent p-10 md:p-20 focus:outline-none text-16 mb-18 transition duration-300 ease-in'
           id='registration-email'
           placeholder={placeholders.email}
           name='email'
-          autoComplete='off'
+          value={values.email}
           onChange={(e) => {
             handleChange(e);
             setIsError(false);
           }}
-          value={values.email}
         />
-        <div className='bg-white rounded-lg focus:border-blue border-3 border-transparent text-16 mb-18 transition duration-300 ease-in flex justify-between align-center'>
-          <input
-            type={isPasswordVisible ? 'text' : 'password'}
-            className='registration-form-input focus:outline-none p-10 md:p-20 bg-white w-full'
-            id='registration-psw'
-            placeholder={placeholders.password}
-            name='password'
-            autoComplete='new-password'
-            onChange={(e) => {
-              handleChange(e);
-              setIsError(false);
-            }}
-            value={values.password}
-          />
-          <div className='flex flex-col justify-center'>
-            <button
-              type='button'
-              className='h-32 w-32 mr-12'
-              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-            >
-              <img src={isPasswordVisible ? closedEye : eye} alt='eye' />
-            </button>
-          </div>
-        </div>
-
-        <div className='bg-white rounded-lg focus:border-blue border-3 border-transparent text-16 mb-18 transition duration-300 ease-in flex justify-between align-center'>
-          <input
-            type={isPasswordConfirmVisible ? 'text' : 'password'}
-            className='registration-form-input focus:outline-none p-10 md:p-20 bg-white w-full'
-            id='registration-psw-confirm'
-            placeholder={placeholders.passwordConfirm}
-            name='passwordConfirm'
-            autoComplete='new-password'
-            onChange={(e) => {
-              handleChange(e);
-              setIsError(false);
-            }}
-            value={values.passwordConfirm}
-          />
-          <div className='flex flex-col justify-center'>
-            <button
-              type='button'
-              className='h-32 w-32 mr-12'
-              onClick={() =>
-                setIsPasswordConfirmVisible(!isPasswordConfirmVisible)
-              }
-            >
-              <img src={isPasswordConfirmVisible ? closedEye : eye} alt='eye' />
-            </button>
-          </div>
-        </div>
-        <button
+        <PasswordInput
+          placeholder={placeholders.password}
+          value={values.password}
+          name='password'
+          id={'registration-psw'}
+          onChange={(e) => {
+            handleChange(e);
+            setIsError(false);
+          }}
+        />
+        <PasswordInput
+          placeholder={placeholders.passwordConfirm}
+          value={values.passwordConfirm}
+          name='passwordConfirm'
+          id={'registration-psw-confirm'}
+          onChange={(e) => {
+            handleChange(e);
+            setIsError(false);
+          }}
+        />
+        <ButtonPrimary
           disabled={isLoading || isError || !isValid}
           type='submit'
-          id='button'
-          className='bg-white text-yellow hover:bg-pink hover:text-black disabled:bg-white disabled:text-yellow disabled:opacity-20 rounded-lg py-10 px-20 font-heading font-bold transition duration-300'
-        >
-          Continua
-        </button>
+          id='confirm-registration-button'
+          label='Continua'
+        />
         {isError && (
           <div className='mt-20'>
             <p className='text-18 text-pink'>Si è verificato un errore</p>
