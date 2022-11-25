@@ -1,15 +1,23 @@
 import React from 'react';
 
 interface ButtonPrimaryProps {
-  disabled: boolean;
+  disabled?: boolean;
   type: 'button' | 'submit' | 'reset' | undefined;
   id: string;
   label: string;
+  onClick?: () => void;
 }
 
-const ButtonPrimary = ({ disabled, type, id, label }: ButtonPrimaryProps) => {
+const ButtonPrimary = ({
+  disabled,
+  type,
+  id,
+  label,
+  onClick,
+}: ButtonPrimaryProps) => {
   return (
     <button
+      onClick={onClick}
       disabled={disabled}
       type={type}
       id={id}

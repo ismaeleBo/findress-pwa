@@ -8,7 +8,7 @@ const Home = () => {
   const [loggedUser, setLoggedUser] = useState('');
 
   useEffect(() => {
-    if (user.isLogged) {
+    if (user.isLogged && user.username) {
       setLoggedUser(capitalizeFirstLetter(user.username));
       return;
     }

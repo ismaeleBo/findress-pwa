@@ -45,7 +45,7 @@ const PasswordInput = ({
             className='h-32 w-32 mr-12'
             onClick={() => setIsPasswordVisible(!isPasswordVisible)}
           >
-            <img src={isPasswordVisible ? closedEye : eye} alt='eye' />
+            <img src={isPasswordVisible ? eye : closedEye} alt='eye' />
           </button>
         </div>
       </div>
